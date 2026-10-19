@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A small program for you 💗</title>
+<style>
+:root{--bg:#fff3f7;--card:#ffffff;--ink:#2a1a22;--mute:#76596a;--pink:#d63a72;--onpink:#ffffff;--teal:#0b7d7a;--line:#f0cddb;--code:#fdeaf1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#120b14;--card:#1c1220;--ink:#fbeaf1;--mute:#b79ba8;--pink:#ff6b9d;--onpink:#2a0f1a;--teal:#3ddbd0;--line:#3a2540;--code:#150d18}}
+:root[data-theme="dark"]{--bg:#120b14;--card:#1c1220;--ink:#fbeaf1;--mute:#b79ba8;--pink:#ff6b9d;--onpink:#2a0f1a;--teal:#3ddbd0;--line:#3a2540;--code:#150d18}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Trebuchet MS",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#bg{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+main{position:relative;z-index:1;min-height:100svh;display:grid;place-items:center;padding:20px}
+.card{width:100%;max-width:540px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 40px rgba(214,58,114,.16)}
+.con{font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);color:var(--teal);border-radius:12px;padding:14px;min-height:118px;overflow-x:auto}
+h1{font-size:1.45rem;line-height:1.3;margin:20px 0 16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;min-height:58px}
+button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:13px 22px;cursor:pointer}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+#yes{background:var(--pink);color:var(--onpink);transition:transform .25s}
+#no{background:var(--card);color:var(--mute);border:1px solid var(--line)}
+.hide{display:none}
+.in{animation:f .8s both}
+@keyframes f{from{opacity:0;transform:translateY(8px)}}
+.tile{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;animation:f .7s both}
+#resp{margin:10px 0 0;color:var(--mute)}
+#cp,#fx{background:var(--pink);color:var(--onpink)}
+button:disabled{opacity:.5;cursor:default}
+.mute{color:var(--mute)}
+.bad{color:var(--pink);font-weight:700;text-decoration:underline}
+.ok{font-weight:700;background:var(--line);border-radius:4px}
+@media (prefers-reduced-motion:reduce){.in,.tile{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<main>
+<div class="card">
+  <div id="lab">
+    <h1 style="margin-top:0">Before I ask you something, a tiny biology lesson 🧬</h1>
+    <p class="mute" style="margin:0 0 14px">You love biology, so let’s ask the cells. Tap the buttons.</p>
+    <div class="con" id="dna" style="min-height:52px;letter-spacing:.14em;font-size:15px"></div>
+    <div class="row"><button id="cp">1. Copy the DNA</button><button id="fx" class="hide">2. Send the repair team 🛠️</button></div>
+    <p id="lt" class="hide mute" style="margin:0"></p>
+    <div id="facts" class="hide">
+      <div class="tile">🧬 Every cell makes copy mistakes. Life didn’t survive by being perfect. It survived by repairing.</div>
+      <div class="tile" style="animation-delay:.6s">🌱 Plant roots and fungi are different species, yet they live together and both grow stronger.</div>
+      <div class="tile" style="animation-delay:1.2s">🌳 Two branches, one tree. Sunni and Shia grew from the same roots: one God, one Prophet, one Quran. We can share the same shade.</div>
+      <div class="tile" style="animation-delay:1.8s">💗 A fight isn’t the end of the story. It’s a signal that something needs repair. Let’s be each other’s repair team.</div>
+    </div>
+    <div class="row" style="margin-top:14px"><button id="go" class="hide in" style="background:var(--pink);color:var(--onpink)">Continue 💗</button></div>
+  </div>
+  <div id="ask" class="hide">
+    <p style="margin:0 0 12px;color:var(--mute)">Hey you 👋 I made this just for you.</p>
+    <div class="con" id="con" aria-live="polite"></div>
+    <div id="q" class="hide in">
+      <h1>Will you stay with your fav baby girl, the only girl you love? 🥺</h1>
+      <div class="row"><button id="yes">Yes, I’ll stay 💗</button><button id="no">No</button></div>
+      <p id="resp" class="hide"></p>
+    </div>
+  </div>
+  <div id="yay" class="hide">
+    <h1 style="font-size:2.1rem;margin:0 0 6px">YAYYY! 🎉💗</h1>
+    <p style="margin:0 0 14px">Wait until you see how happy you’ll be… and you will never regret it.</p>
+    <div class="con" id="con2" style="min-height:70px"></div>
+    <div class="tile" style="animation-delay:1.2s">🔬 <b>Hypothesis:</b> we’re better together.<br><b>Result:</b> confirmed ✅ (p &lt; 0.001)</div>
+    <div class="tile" style="animation-delay:1.8s">🧬 Holding hands releases oxytocin. Let’s repeat the experiment. Many, many times.</div>
+    <div class="tile" style="animation-delay:2.4s">🤖 Even the smartest AI gets better with more training. Let me train on loving you better.</div>
+    <div class="tile" style="animation-delay:3s">💗 I know you gave me many chances. I’m ready to change, not only with words. Let me show you.</div>
+  </div>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('bg'),cx=cv.getContext('2d'),D=Math.min(window.devicePixelRatio||1,2);
+let W,H;
+function rs(){W=innerWidth;H=innerHeight;cv.width=W*D;cv.height=H*D;cx.setTransform(D,0,0,D,0,0)}
+rs();addEventListener('resize',rs);
+const col={};
+function rc(){const s=getComputedStyle(document.documentElement);col.p=s.getPropertyValue('--pink').trim();col.t=s.getPropertyValue('--teal').trim()}
+rc();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',rc);
+const N=Array.from({length:38},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}));
+const HT=[];
+function burst(){for(let i=0;i<90;i++)HT.push({x:W/2,y:H/2,vx:(Math.random()-.5)*14,vy:-Math.random()*14-2,s:16+Math.random()*20})}
+function draw(){
+  cx.clearRect(0,0,W,H);
+  for(const n of N){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1}
+  cx.strokeStyle=col.t;cx.lineWidth=1;
+  for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){
+    const a=N[i],b=N[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<130){cx.globalAlpha=.3*(1-d/130);cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke()}
+  }
+  cx.fillStyle=col.p;cx.globalAlpha=.5;
+  for(const n of N){cx.beginPath();cx.arc(n.x,n.y,2.5,0,6.3);cx.fill()}
+  cx.globalAlpha=1;
+  for(let i=HT.length-1;i>=0;i--){
+    const h=HT[i];h.x+=h.vx;h.y+=h.vy;h.vy+=.35;h.vx*=.99;
+    if(h.y>H+40)HT.splice(i,1);else{cx.font=h.s+'px serif';cx.fillText('💗',h.x,h.y)}
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+function typeLines(el,lines,cb){
+  let i=0;
+  (function next(){
+    if(i>=lines.length){if(cb)cb();return}
+    const d=document.createElement('div');el.appendChild(d);
+    const s=lines[i++];let j=0;
+    (function c(){d.textContent=s.slice(0,++j);if(j<s.length)setTimeout(c,18);else setTimeout(next,260)})();
+  })();
+}
+function startAsk(){typeLines($('con'),[
+  '> loading our story… done',
+  '> compiling “us”… 0 errors, 1 warning: too much love',
+  '> running chemistry test… 100% match',
+  '> one tiny question for you:'
+],()=>$('q').classList.remove('hide'))}
+
+const SEQ='ATGCCGTAAGCTTAGGCATCGATTACG',BAD=[4,11,19],sp=[];
+const flip=c=>c==='A'?'T':c==='T'?'G':c==='G'?'C':'A';
+$('cp').addEventListener('click',function(){
+  this.disabled=true;const dna=$('dna');dna.textContent='';let i=0;
+  (function t(){
+    if(i>=SEQ.length){
+      $('lt').textContent='Oops, '+BAD.length+' copy mistakes. Every cell makes mistakes when it copies itself.';
+      $('lt').classList.remove('hide');$('fx').classList.remove('hide');return;
+    }
+    const s=document.createElement('span');
+    if(BAD.includes(i)){s.textContent=flip(SEQ[i]);s.className='bad'}else s.textContent=SEQ[i];
+    dna.appendChild(s);sp.push(s);i++;setTimeout(t,70);
+  })();
+});
+$('fx').addEventListener('click',function(){
+  this.disabled=true;let k=0;
+  (function r(){
+    if(k>=BAD.length){
+      $('lt').textContent='Fixed ✅ Mistakes happen all the time. What keeps life going is repair.';
+      $('facts').classList.remove('hide');
+      setTimeout(()=>$('go').classList.remove('hide'),2400);return;
+    }
+    const s=sp[BAD[k]];s.textContent=SEQ[BAD[k]];s.className='ok';k++;setTimeout(r,700);
+  })();
+});
+$('go').addEventListener('click',()=>{
+  $('lab').classList.add('hide');$('ask').classList.remove('hide');startAsk();
+});
+
+const no=$('no'),yes=$('yes'),MAX=8;let dg=0;
+const L=['No','Are you sure? 🥺','Really?','Think again…','Catch me!','Almost…','Not so fast 😜','Last try…'];
+function dodge(e){
+  if(dg>=MAX)return false;
+  if(e.cancelable)e.preventDefault();
+  dg++;
+  no.style.position='fixed';no.style.zIndex=5;
+  const w=no.offsetWidth,h=no.offsetHeight;
+  no.style.left=(10+Math.random()*(innerWidth-w-20))+'px';
+  no.style.top=(10+Math.random()*(innerHeight-h-20))+'px';
+  no.textContent=dg>=MAX?'…okay, I hear you':L[dg];
+  yes.style.transform='scale('+(1+Math.min(dg,6)*.06)+')';
+  return true;
+}
+no.addEventListener('pointerenter',dodge);
+no.addEventListener('click',e=>{
+  if(dodge(e))return;
+  no.classList.add('hide');
+  const r=$('resp');
+  r.textContent='I hear you 💗 I love you, and I want you to be at peace with whatever you choose. I’m here if you ever want to talk.';
+  r.classList.remove('hide');
+});
+yes.addEventListener('click',()=>{
+  $('ask').classList.add('hide');no.classList.add('hide');
+  $('yay').classList.remove('hide');
+  burst();setTimeout(burst,700);
+  typeLines($('con2'),['> answer = “yes” 💗','$ git commit -m “we stayed together”']);
+});
+</script>
+</body>
+</html>
